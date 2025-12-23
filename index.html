@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Builder</title>
+    <style>
+        :root { --header-bg: #333; --footer-bg: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f4f4f9; }
+        header { background: var(--header-bg); color: white; padding: 1rem; text-align: center; }
+        footer { background: var(--footer-bg); color: white; padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; }
+        
+        .container { max-width: 900px; margin: 20px auto 100px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        h2 { color: #444; border-left: 5px solid #007bff; padding-left: 10px; }
+
+        /* Layout for Personal Info & Photo */
+        .personal-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .fields-column { display: flex; flex-direction: column; gap: 10px; }
+        .photo-column { border: 2px dashed #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; height: 200px; text-align: center; }
+
+        /* Inputs and Tooltips */
+        input, textarea, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        input:focus::placeholder { color: transparent; }
+        
+        /* Dynamic Row Styling */
+        .dynamic-row { background: #fafafa; padding: 15px; border: 1px solid #e0e0e0; margin-bottom: 10px; position: relative; border-radius: 5px; }
+        .controls { display: flex; gap: 5px; margin-top: 10px; justify-content: flex-end; }
+        .btn-icon { cursor: pointer; padding: 5px 10px; border: none; border-radius: 3px; color: white; }
+        .btn-add { background: #28a745; margin-bottom: 10px; }
+        .btn-del { background: #dc3545; }
+        .btn-move { background: #6c757d; }
+
+        /* Settings Icon */
+        .settings-panel { position: fixed; top: 10px; right: 10px; background: white; border: 1px solid #ccc; padding: 10px; border-radius: 5px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .submit-container { text-align: center; margin-top: 20px; }
+        .btn-submit { background: #007bff; color: white; padding: 10px 40px; border: none; border-radius: 20px; cursor: pointer; font-size: 16px; }
+
+        .skills-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="settings-panel">
+    <strong>⚙️ Settings</strong><br>
+    Theme: 
+    <select id="colorPicker" onchange="changeTheme(this.value)">
+        <option value="#333">Standard</option>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="yellow">Yellow</option>
+        <option value="purple">Purple</option>
+        <option value="orange">Orange</option>
+        <option value="green">Green</option>
+    </select>
+    <br><br>
+    <button onclick="window.print()">Review</button>
+</div>
+
+<header id="mainHeader"><h1>Resume Builder</h1></header>
+
+<div class="container">
+    <form id="resumeForm" onsubmit="handleSubmit(event)">
+        
+        <div class="section">
+            <h2>Personal Information</h2>
+            <div class="personal-grid">
+                <div class="fields-column">
+                    <input type="text" name="name" placeholder="Full Name" title="Enter your Full Name" required>
+                    <input type="email" name="email" placeholder="Email (example@mail.com)" title="Enter a valid Email" required>
+                    <input type="tel" name="phone" pattern="[0-9]+" placeholder="Phone Number (Numbers only)" title="Numbers only allowed" required>
+                    <input type="date" name="dob" title="Date of Birth" required>
+                    <textarea name="objective" maxlength="600" placeholder="Professional Objective (Max 100 words approx)" title="Your Objective" required></textarea>
+                    <input type="text" name="linkedin" placeholder="LinkedIn ID" title="LinkedIn Profile Link" required>
+                    <input type="text" name="github" placeholder="GitHub ID" title="GitHub Profile Link" required>
+                </div>
+                <div class="photo-column">
+                    <label>Upload Photo</label>
+                    <input type="file" accept="image/*" required title="Upload Profile Photo">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Work Experience</h2>
+            <input type="text" placeholder="Company Name" title="Company Name" required>
+            <div style="display: flex; gap: 10px; margin-top:10px;">
+                <input type="date" id="doj" title="Date of Joining" onchange="calculateExp()" required>
+                <input type="date" id="lwd" title="Last Working Date" onchange="calculateExp()" required>
+                <input type="text" id="expResult" placeholder="Experience (Auto)" readonly title="Calculated Experience">
+            </div>
+        </div>
+
+        <div class="section" id="educationSection">
+            <h2>Education</h2>
+            <button type="button" class="btn-icon btn-add" onclick="addEntry('eduList')">➕ Add Education</button>
+            <div id="eduList">
+                <div class="dynamic-row">
+                    <input type="text" placeholder="College/University" required title="College Name">
+                    <input type="text" placeholder="Course" required title="Course Name">
+                    <div style="display:flex; gap:10px;">
+                        <input type="number" placeholder="Year" required title="Passing Year">
+                        <input type="number" placeholder="Percentage" required title="Percentage">
+                    </div>
+                    <div class="controls">
+                        <button type="button" class="btn-icon btn-move" onclick="moveUp(this)">▲</button>
+                        <button type="button" class="btn-icon btn-move" onclick="moveDown(this)">▼</button>
+                        <button type="button" class="btn-icon btn-del" onclick="removeRow(this)">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Projects</h2>
+            <button type="button" class="btn-icon btn-add" onclick="addEntry('projectList')">➕ Add Project</button>
+            <div id="projectList">
+                <div class="dynamic-row">
+                    <input type="text" placeholder="Project Name" required title="Project Name">
+                    <textarea placeholder="Description" required title="Project Description"></textarea>
+                    <input type="url" placeholder="Project Link" required title="Project Link">
+                    <div class="controls">
+                        <button type="button" class="btn-icon btn-move" onclick="moveUp(this)">▲</button>
+                        <button type="button" class="btn-icon btn-move" onclick="moveDown(this)">▼</button>
+                        <button type="button" class="btn-icon btn-del" onclick="removeRow(this)">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div id="persSkills">
+                    <strong>Personal</strong>
+                    <button type="button" onclick="addSkill('persSkills')">+</button>
+                    <input type="text" placeholder="Skill" required>
+                </div>
+                <div id="profSkills">
+                    <strong>Professional</strong>
+                    <button type="button" onclick="addSkill('profSkills')">+</button>
+                    <input type="text" placeholder="Skill" required>
+                </div>
+                <div id="techSkills">
+                    <strong>Technical</strong>
+                    <button type="button" onclick="addSkill('techSkills')">+</button>
+                    <input type="text" placeholder="Skill" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Hobbies & Certifications</h2>
+            <div id="hobbies">
+                <strong>Hobbies</strong> <button type="button" onclick="addSkill('hobbies')">+</button>
+                <input type="text" placeholder="Hobby" required>
+            </div>
+            <div style="margin-top:20px;">
+                <strong>Certification Details</strong>
+                <input type="text" placeholder="Certification Name" required title="Cert Name">
+                <input type="text" placeholder="Management/Issuing Body" required title="Issued By">
+                <textarea placeholder="Certification Objective" required title="Objective"></textarea>
+            </div>
+        </div>
+
+        <div class="submit-container">
+            <button type="submit" class="btn-submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<footer id="mainFooter">Resume Builder System &copy; 2023</footer>
+
+<script>
+    // Theme Switcher
+    function changeTheme(color) {
+        document.documentElement.style.setProperty('--header-bg', color);
+        document.documentElement.style.setProperty('--footer-bg', color);
+    }
+
+    // Experience Calculator
+    function calculateExp() {
+        const doj = new Date(document.getElementById('doj').value);
+        const lwd = new Date(document.getElementById('lwd').value);
+        if (doj && lwd && lwd > doj) {
+            const diff = new Date(lwd - doj);
+            const years = Math.abs(diff.getUTCFullYear() - 1970);
+            document.getElementById('expResult').value = years + " Years";
+        }
+    }
+
+    // Dynamic Row Logic
+    function addEntry(containerId) {
+        const container = document.getElementById(containerId);
+        const clone = container.firstElementChild.cloneNode(true);
+        clone.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        container.appendChild(clone);
+    }
+
+    function addSkill(containerId) {
+        const div = document.getElementById(containerId);
+        const newInp = document.createElement('div');
+        newInp.style.display = "flex";
+        newInp.innerHTML = `<input type="text" required> <button type="button" class="btn-del" onclick="this.parentElement.remove()">🗑️</button>`;
+        div.appendChild(newInp);
+    }
+
+    function removeRow(btn) {
+        const rows = btn.closest('.dynamic-row').parentElement.querySelectorAll('.dynamic-row');
+        if(rows.length > 1) btn.closest('.dynamic-row').remove();
+        else alert("At least one entry is mandatory!");
+    }
+
+    function moveUp(btn) {
+        const row = btn.closest('.dynamic-row');
+        if (row.previousElementSibling) row.parentNode.insertBefore(row, row.previousElementSibling);
+    }
+
+    function moveDown(btn) {
+        const row = btn.closest('.dynamic-row');
+        if (row.nextElementSibling) row.parentNode.insertBefore(row.nextElementSibling, row);
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        alert("Form Submitted Successfully! Redirecting to preview...");
+        document.body.innerHTML = "<h1>Final Submission Received</h1><p>The details have been processed. Review your data above.</p><button onclick='location.reload()'>Go Back</button>";
+    }
+</script>
+
+</body>
+</html>
