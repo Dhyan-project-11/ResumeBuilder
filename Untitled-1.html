@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Registration Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding-bottom: 50px; }
+        header { background-color: #be0aff; color: white; padding: 1rem 5%; text-align: center; }
+        .container { max-width: 600px; margin: 30px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .form-section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #333; }
+        input[type="text"], input[type="tel"], input[type="date"], select, textarea { 
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; 
+        }
+        .radio-group { display: flex; gap: 20px; }
+        .submit-btn { 
+            width: 100%; background-color: #28a745; color: white; padding: 14px; border: none; 
+            border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px;
+        }
+        .submit-btn:hover { background-color: #218838; }
+        
+        /* Result Display Area */
+        #resultArea { 
+            display: none; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 8px; 
+            border-left: 5px solid #be0aff; white-space: pre-wrap; font-family: monospace;
+        }
+
+        /* Language Dropdown Style */
+        .multiselect-container { position: relative; }
+        .select-display { border: 1px solid #ccc; padding: 10px; border-radius: 6px; cursor: pointer; background: white; display: flex; justify-content: space-between; }
+        .options-list { display: none; position: absolute; width: 100%; background: white; border: 1px solid #ccc; z-index: 10; max-height: 150px; overflow-y: auto; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .options-list label { font-weight: normal; padding: 8px; margin: 0; display: flex; align-items: center; cursor: pointer; }
+        .options-list label:hover { background: #f0f0f0; }
+        .show { display: block; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>Information Portal</h2>
+    <p>We'd love to hear from you</p>
+</header>
+
+<div class="container">
+    <form id="registrationForm">
+        <div class="form-section">
+            <label for="fname">Full Name</label>
+            <input type="text" id="fname" name="FullName" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-section">
+            <label for="phone">Mobile Number</label>
+            <input type="tel" id="phone" name="Phone" placeholder="1234567890" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+        </div>
+
+        <div class="form-section">
+            <label>Address</label>
+            <textarea id="address1" name="Address1" rows="2" placeholder="Line 1" style="margin-bottom:10px"></textarea>
+            <textarea id="address2" name="Address2" rows="2" placeholder="Line 2"></textarea>
+        </div>
+
+        <div class="form-section">
+            <label for="state">State</label>
+            <select id="state" name="State" onchange="updateCities()">
+                <option value="" selected disabled>-- Select State --</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+            </select>
+
+            <label style="margin-top:10px">City</label>
+            <select id="city" name="City" disabled>
+                <option value="">-- Select a State First --</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label>Gender</label>
+            <div class="radio-group">
+                <label><input type="radio" name="Gender" value="Male"> Male</label>
+                <label><input type="radio" name="Gender" value="Female"> Female</label>
+                <label><input type="radio" name="Gender" value="Other"> Other</label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <label>Languages Known</label>
+            <div class="multiselect-container">
+                <div class="select-display" onclick="toggleDropdown()">
+                    <span id="langText">Select Languages...</span>
+                    <span>▼</span>
+                </div>
+                <div class="options-list" id="languageList">
+                    <label><input type="checkbox" name="Lang" value="English" onchange="updateLangText()"> English</label>
+                    <label><input type="checkbox" name="Lang" value="Kannada" onchange="updateLangText()"> Kannada</label>
+                    <label><input type="checkbox" name="Lang" value="Hindi" onchange="updateLangText()"> Hindi</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <label for="onboard_date">Onboarding Date</label>
+            <input type="date" id="onboard_date" name="OnboardDate">
+        </div>
+
+        <button type="button" class="submit-btn" onclick="processForm()">Submit All Details</button>
+    </form>
+
+    <div id="resultArea"></div>
+</div>
+
+<script>
+    const cityData = {
+        "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru"],
+        "Kerala": ["Kochi", "Thiruvananthapuram", "Kozhikode"],
+        "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"]
+    };
+
+    function updateCities() {
+        const state = document.getElementById("state").value;
+        const citySelect = document.getElementById("city");
+        citySelect.innerHTML = '<option value="">-- Select City --</option>';
+        if (state) {
+            citySelect.disabled = false;
+            cityData[state].forEach(c => {
+                let opt = document.createElement("option");
+                opt.value = c; opt.textContent = c;
+                citySelect.appendChild(opt);
+            });
+        }
+    }
+
+    function toggleDropdown() {
+        document.getElementById("languageList").classList.toggle("show");
+    }
+
+    function updateLangText() {
+        const checked = Array.from(document.querySelectorAll('input[name="Lang"]:checked')).map(el => el.value);
+        document.getElementById("langText").innerText = checked.length > 0 ? checked.join(", ") : "Select Languages...";
+    }
+
+    // THE CORE LOGIC TO GET ENTIRE DETAILS
+    function processForm() {
+        const form = document.getElementById("registrationForm");
+        const formData = new FormData(form);
+        let output = "=== SUBMITTED DETAILS ===\n\n";
+
+        // Loop through standard entries
+        formData.forEach((value, key) => {
+            // Logic for checkboxes since they share the same name
+            if (key === "Lang") return; 
+            output += `${key}: ${value}\n`;
+        });
+
+        // Add Multi-select languages specifically
+        const selectedLangs = Array.from(document.querySelectorAll('input[name="Lang"]:checked')).map(el => el.value);
+        output += `Languages: ${selectedLangs.join(", ")}\n`;
+
+        // Display the output
+        const resultArea = document.getElementById("resultArea");
+        resultArea.innerText = output;
+        resultArea.style.display = "block";
+        
+        // Optional: Scroll to result
+        resultArea.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.closest('.multiselect-container')) {
+            document.getElementById("languageList").classList.remove("show");
+        }
+    }
+</script>
+
+</body>
+</html>

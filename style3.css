@@ -1,0 +1,31 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppings',sans-serif;
+}
+body{
+    min-height:100vh;
+}
+a{
+    text_decoration: none;
+}
+li{
+    list-style: none;
+}
+h1,
+h2{
+    color:brown;
+}
+.side-menu{
+    position:fixed;
+    background-color: red;
+    width: 20vw;
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+}
+.side-menu .bramd-name{
+    height: 10vh;
+    display: ;
+}

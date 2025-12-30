@@ -1,0 +1,229 @@
+<html>
+    <head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Registration Portal</title>
+    
+</head>
+<body>
+ <script src="script.js"></script>
+<header class="form-header">
+  <link rel="stylesheet" href="style.css">
+        <h2 style="margin: 0;">Information</h2>
+        <p style="margin: 5px 0 0;">We'd love to hear from you</p>
+    </header>
+   <form id="myform" style="font-family: sans-serif; max-width: 4000px;">
+     <label for="Name"> Name:</label>
+     <input type="text" id="name" name="Name" placeholder="Enter your name">
+    <div style="margin-bottom: 10px; font-family: sans-serif;">
+    <label for="phone"  style="display: block; margin-bottom: 5px;">Mobile Number:</label>
+    <input 
+      type="tel" 
+      id="phone" 
+      name="phone" 
+      placeholder="e.g. 1234567890" 
+      pattern="[0-9]*" 
+      inputmode="numeric" 
+      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+      required
+    >
+    <small style="display: block; color: #666;">Numbers only</small>
+    </div>
+    <div style="font-family: sans-serif; max-width: 400px;">
+      
+      <div style="margin-bottom: 15px;">
+        <label for="address1" style="display: block; font-weight: bold; margin-bottom: 5px;">Address Line 1:</label>
+        <textarea 
+          id="address1" 
+          name="address1" 
+          rows="3" 
+          placeholder="House No, Street Name, Locality"
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"
+        ></textarea>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label for="address2" style="display: block; font-weight: bold; margin-bottom: 5px;">Address Line 2:</label>
+        <textarea 
+          id="address2" 
+          name="address2" 
+          rows="3" 
+          placeholder="Landmark, Area, Suite/Apartment"
+          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"
+        ></textarea>
+      </div>
+
+    </div>
+
+    <h3>Location Selector</h3>
+    
+    <label for="state">1. Select State</label>
+    <select id="state" onchange="updateCities()">
+        <option value="" selected disabled>-- Select State --</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Kerala">Kerala</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Telangana">Telangana</option>
+    </select>
+
+    <label for="city">2. Select City</label>
+    <select id="city" disabled>
+        <option value="" selected disabled>-- Select a State First --</option>
+    </select>
+
+    <div style="margin-bottom: 15px; font-family: sans-serif;">
+      <label for="pcode" style="display: block; font-weight: bold; margin-bottom: 5px;">Postal Code:</label>
+      <input 
+        type="text" 
+        id="pcode" 
+        name="pcode" 
+        placeholder="12345" 
+        inputmode="numeric" 
+        maxlength="6"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+        style="padding: 8px; width: 120px; border: 1px solid #ccc; border-radius: 4px;"
+      >
+      <small style="display: block; color: #666;">Numbers only (Max 6 digits)</small>
+    </div>
+    <div style="margin-bottom: 15px; font-family: sans-serif;">
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="birthday" name="birthday">
+    </div>
+
+<div class="multiselect-container">
+  <strong>Select Languages:</strong>
+  <div class="select-box">
+    <label><input type="checkbox" name="lang" value="en"> English</label>
+    <label><input type="checkbox" name="lang" value="es"> Spanish</label>
+    <label><input type="checkbox" name="lang" value="fr"> French</label>
+    <label><input type="checkbox" name="lang" value="de"> German</label>
+    <label><input type="checkbox" name="lang" value="hi"> Hindi</label>
+  </div>
+</div>
+
+
+    <div style="margin-bottom: 20px; font-family: sans-serif;">
+      <label style="display: block; font-weight: bold; margin-bottom: 10px; color: #333;">Gender:</label>
+      
+      <div style="display: flex; gap: 20px; align-items: center;">
+        <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+          <input type="radio" id= "rdmale" name="gender" value="male" style="width: 18px; height: 18px; cursor: pointer;"> 
+          Male
+        </label>
+
+        <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+          <input type="radio" id= "rdfemale" name="gender" value="female" style="width: 18px; height: 18px; cursor: pointer;"> 
+          Female
+        </label>
+
+        <label style="font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+          <input type="radio" id= "rdOther"  name="gender" value="other" style="width: 18px; height: 18px; cursor: pointer;"> 
+          Other
+        </label>
+      </div>
+    </div>
+
+<h3>South India Travel History</h3>
+
+<div class="dropdown" id="statevisit" name="visited">
+  <button type="button" class="dropdown-button">Select States Visited ▼</button>
+  <div class="dropdown-content">
+    <label><input type="checkbox" name="state" value="AP"> Andhra Pradesh</label>
+    <label><input type="checkbox" name="state" value="KA"> Karnataka</label>
+    <label><input type="checkbox" name="state" value="KL"> Kerala</label>
+    <label><input type="checkbox" name="state" value="TN"> Tamil Nadu</label>
+    <label><input type="checkbox" name="state" value="TS"> Telangana</label>
+    <label><input type="checkbox" name="state" value="PY"> Puducherry (UT)</label>
+  </div>
+</div>
+
+<div style="margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; position: relative; max-width: 400px;">
+    <label style="display: block; font-weight: bold; margin-bottom: 8px;">Known Areas in Bengaluru:</label>
+    
+    <div id="areaSelectBox" onclick="toggleAreaMenu()" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; background: white; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+        <span id="areaDisplayText" style="color: #666;">Select Areas...</span>
+        <span style="font-size: 10px; color: #999;">▼</span>
+    </div>
+
+    <div id="areaMenu" name="area" style="display: none; position: absolute; width: 100%; background: white; border: 1px solid #ccc; border-radius: 0 0 8px 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto;">
+        
+        <div style="background: #f1f1f1; padding: 5px 10px; font-size: 12px; font-weight: bold; color: #555;">SOUTH BENGALURU</div>
+        <label class="area-item"><input type="checkbox" value="Jayanagar" onchange="updateAreas()"> Jayanagar</label>
+        <label class="area-item"><input type="checkbox" value="JP Nagar" onchange="updateAreas()"> JP Nagar</label>
+        <label class="area-item"><input type="checkbox" value="Banashankari" onchange="updateAreas()"> Banashankari</label>
+        <label class="area-item"><input type="checkbox" value="BTM Layout" onchange="updateAreas()"> BTM Layout</label>
+
+        <div style="background: #f1f1f1; padding: 5px 10px; font-size: 12px; font-weight: bold; color: #555;">EAST BENGALURU</div>
+        <label class="area-item"><input type="checkbox" value="Indiranagar" onchange="updateAreas()"> Indiranagar</label>
+        <label class="area-item"><input type="checkbox" value="Whitefield" onchange="updateAreas()"> Whitefield</label>
+        <label class="area-item"><input type="checkbox" value="HSR Layout" onchange="updateAreas()"> HSR Layout</label>
+        <label class="area-item"><input type="checkbox" value="Marathahalli" onchange="updateAreas()"> Marathahalli</label>
+
+        <div style="background: #f1f1f1; padding: 5px 10px; font-size: 12px; font-weight: bold; color: #555;">NORTH & WEST</div>
+        <label class="area-item"><input type="checkbox" value="Hebbal" onchange="updateAreas()"> Hebbal</label>
+        <label class="area-item"><input type="checkbox" value="Malleshwaram" onchange="updateAreas()"> Malleshwaram</label>
+        <label class="area-item"><input type="checkbox" value="Rajajinagar" onchange="updateAreas()"> Rajajinagar</label>
+        <label class="area-item"><input type="checkbox" value="Yelahanka" onchange="updateAreas()"> Yelahanka</label>
+
+        <div style="padding: 10px; background: #f8f9fa; text-align: right; position: sticky; bottom: 0; border-top: 1px solid #eee;">
+            <button type="button" onclick="toggleAreaMenu()" style="background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">Done</button>
+        </div>
+    </div>
+</div>
+
+    <div style="margin-bottom: 15px; font-family: sans-serif;">
+      <label for="pincode" style="display: block; font-weight: bold; margin-bottom: 8px;">Pin Code:</label>
+      <input 
+        type="text" 
+        id="pincode" 
+        name="pincode" 
+        placeholder="6-digit number" 
+        inputmode="numeric" 
+        maxlength="6"
+        oninput="validatePin(this)"
+        style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;"
+        required
+      >
+      <small id="pin-hint" style="display: block; color: #666; margin-top: 4px;">Enter the 6-digit pin for your selected city.</small>
+    </div>
+
+    </div>
+    <div style="margin-bottom: 15px; font-family: sans-serif;">
+      <label for="status" style="display: block; font-weight: bold; margin-bottom: 8px;">Account Status:</label>
+      <select id="status" name="status" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; background-color: white;">
+        <option value="" disabled selected>-- Select Status --</option>
+        <option value="active" style="color: green;">● Active</option>
+        <option value="inactive" style="color: orange;">● Inactive</option>
+        <option value="suspended" style="color: red;">● Suspended</option>
+      </select>
+    </div>
+
+<form>
+  <label for="doj">Date of Joining:</label>
+  <input type="date" id="doj" name="doj">
+</form>
+
+
+    <div style="margin-bottom: 20px; font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 400px;">
+    <label for="user_type" style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Type:</label>
+    
+    <select id="user_type" name="user_type" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; background-color: white; font-size: 14px; cursor: pointer; outline: none; transition: border-color 0.3s;">
+        <option value="" disabled selected>-- Select Type --</option>
+        <option value="individual">Individual</option>
+        <option value="agency">Agency</option>
+        <option value="sub_agency">Sub Agency</option>
+    </select>
+</div>
+    <div style="margin-top: 20px;"> 
+      <button type="submit" onclick="handleSubmit(event)" class="submit-btn">
+        Submit All Details
+      </button>
+    </div>
+</form>
+<footer class="form-footer">
+        <p>By submitting, you agree to our <a href="#">Terms of Service</a>.</p>
+        <p>&copy; 2025 Your Brand Name</p>
+</footer>     
+</body>
+</html>   

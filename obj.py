@@ -1,0 +1,23 @@
+# This is the CLASS
+class Car:
+    def __init__(self, brand, color):
+        self.brand = brand  # Attribute
+        self.color = color  # Attribute
+
+    def display_info(self): # Method
+        print(f"This is a {self.color}.")
+        print(f"This is a {self.brand}.")
+
+# Creating OBJECTS (Instances)
+car1 = Car("Tesla", "Red")
+car2 = Car("Ford", "Blue")
+
+# Using the objects
+car1.display_info()  # Output: This is a Red Tesla.
+car2.display_info()  # Output: This is a Blue Ford.
+
+
+
+class employee:
+    def putdata(self,id,name,salary):
+        self.id=

@@ -1,0 +1,44 @@
+<form style="font-family: sans-serif; max-width: 400px;">
+  
+  <div style="margin-bottom: 15px;">
+    <label for="addr1" style="display: block; font-weight: bold;">Address Line 1:</label>
+    <textarea 
+      id="addr1" 
+      rows="3" 
+      style="width: 100%;" 
+      placeholder="Street, Apartment, Suite..."
+      oninput="limitWords(this, 50)"></textarea>
+    <small id="addr1-count">0 / 50 words</small>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <label for="addr2" style="display: block; font-weight: bold;">Address Line 2:</label>
+    <textarea 
+      id="addr2" 
+      rows="3" 
+      style="width: 100%;" 
+      placeholder="City, State, Zip Code..."
+      oninput="limitWords(this, 50)"></textarea>
+    <small id="addr2-count">0 / 50 words</small>
+  </div>
+
+</form>
+
+<script>
+  function limitWords(element, maxWords) {
+    // Get text, trim extra spaces, and split by spaces
+    let words = element.value.trim().split(/\s+/);
+    
+    // If the box is empty, word count is 0
+    if (words[0] === "") words = [];
+
+    // Check if limit is reached
+    if (words.length > maxWords) {
+      // Reconstruct text using only the first 50 words
+      element.value = words.slice(0, maxWords).join(" ");
+    }
+    
+    // Update the counter text
+    document.getElementById(element.id + "-count").innerText = words.length + " / " + maxWords + " words";
+  }
+</script>
